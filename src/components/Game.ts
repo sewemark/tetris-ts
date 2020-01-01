@@ -71,18 +71,37 @@ export class Game {
         if (wasCollistion) {
             wasMoved = false;
         }
-        this.gameState.setNewMap(mapWithAddedPiece);
+
+
         if (wasMoved === false) {
             this.markAllMovingCellsAsGameCells();
             this.insertNewPiece();
+        } else {
+            this.gameState.setNewMap(mapWithAddedPiece);
         }
-        console.log(wasCollistion + ' ' + wasMoved);
+        this.checkIfLinesToRemove();
+    }
+    public checkIfLinesToRemove() {
+        let mapWithAddedPiece = cloneDeep(this.gameState.map);
+        for (let j = 0; j < mapWithAddedPiece[0].length; j++) {
 
-        if(wasCollistion && wasMoved ===false) {
-            this.markAllMovingCellsAsGameCells();
-            this.insertNewPiece();
-        } 
+            let toRemove = true;
+            for (let i = 0; i < mapWithAddedPiece.length; i++) {
+                if (mapWithAddedPiece[i][j].constructor !== BlockGameCell) {
+                    toRemove = false;
+                }
+            }
+            if (toRemove) {
+                console.log(mapWithAddedPiece.length);                
+                mapWithAddedPiece.slice(j, );
+                console.log(mapWithAddedPiece.length);
+                const panT = Array.from(Array(mapWithAddedPiece[0].length).keys()).map(x => new GameCell())
+                    console.log(panT);
+                mapWithAddedPiece = [...mapWithAddedPiece,panT];
 
+            }
+        }
+        this.gameState.setNewMap(mapWithAddedPiece);
     }
 
     public down() {
