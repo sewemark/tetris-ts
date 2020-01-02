@@ -1,13 +1,19 @@
-import { Game } from "./Game";
+import { NoRotatingPointFoundError } from "../errors/NoRotatingPointFoundError";
+import { Color } from "csstype";
 
 
 export class GameCell {
     protected readonly GAMEBOARD_ROWS = 15;
     protected readonly GAMEBOARD_COLUMNS = 10;
     protected readonly GAMEBOARD_CELL_SIZE = 50;
-    render(ctx: any, x: number, y: number) {
+    
+    public render(ctx: any, x: number, y: number) {
+        this.drawCell(ctx, x, y, 'red');
+    }
+
+    protected drawCell(ctx: any, x: number, y: number, color: string | Color) {
         ctx.beginPath();
-        ctx.fillStyle = "red"
+        ctx.fillStyle = color
         ctx.fillRect(x * this.GAMEBOARD_CELL_SIZE + 2, y * this.GAMEBOARD_CELL_SIZE + 2, this.GAMEBOARD_CELL_SIZE - 2, this.GAMEBOARD_CELL_SIZE - 2);
         ctx.stroke();
     }
@@ -15,28 +21,29 @@ export class GameCell {
 
 export class MovingGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
-        ctx.beginPath();
-        ctx.fillStyle = "blue"
-        ctx.fillRect(x * this.GAMEBOARD_CELL_SIZE + 2, y * this.GAMEBOARD_CELL_SIZE + 2, this.GAMEBOARD_CELL_SIZE - 2, this.GAMEBOARD_CELL_SIZE - 2);
-        ctx.stroke();
+       this.drawCell(ctx, x,y, 'blue');
     }
 }
 
 export class BlockGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
-        ctx.beginPath();
-        ctx.fillStyle = "green"
-        ctx.fillRect(x * this.GAMEBOARD_CELL_SIZE + 2, y * this.GAMEBOARD_CELL_SIZE + 2, this.GAMEBOARD_CELL_SIZE - 2, this.GAMEBOARD_CELL_SIZE - 2);
-        ctx.stroke();
+        this.drawCell(ctx, x,y, 'green');
     }
 }
 
 export class RotatingMovingGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
-        ctx.beginPath();
-        ctx.fillStyle = "yellow"
-        ctx.fillRect(x * this.GAMEBOARD_CELL_SIZE + 2, y * this.GAMEBOARD_CELL_SIZE + 2, this.GAMEBOARD_CELL_SIZE - 2, this.GAMEBOARD_CELL_SIZE - 2);
-        ctx.stroke();
+        this.drawCell(ctx, x,y, 'yellow');
+    }
+}
+
+export class GameCellPosition {
+    constructor(
+        public x: number,
+        public y: number,
+    ) {
+        this.x = x;
+        this.y = y;
     }
 }
 
@@ -61,5 +68,16 @@ export class GameState {
 
     setNewMap(map: GameCell[][]): void {
         this.map = map;
+    }
+
+    getRotatingGameCell(): GameCellPosition {
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map[0].length; j++) {
+                if (this.map[i][j].constructor === RotatingMovingGameCell) {
+                    return new GameCellPosition(i, j);
+                }
+            }
+        }
+        throw new NoRotatingPointFoundError();
     }
 }

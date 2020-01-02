@@ -30,4 +30,4 @@ export const T_SHAPE = [
     [0, 0, 0, 0],
     [0, 0, 0, 0],
 ]
-export const SHAPES= [ SQUARE_SHAP, I_SHAPE, L_SHAPE, H_SHAPE, T_SHAPE];
+export const SHAPES = [SQUARE_SHAP, I_SHAPE, L_SHAPE, H_SHAPE, T_SHAPE];

@@ -176,7 +176,7 @@ export class Game extends EventEmitter {
     }
 
     public rotate() {
-        const rotating: any = this.getRotatingGameCell() || { x: 0, y: 0 };
+        const rotating: any = this.gameState.getRotatingGameCell();
         let wasCollistion = false
         const mapWithAddedPiece = cloneDeep(this.gameState.map);
         let mapWithAddedPiece2 = cloneDeep(this.gameState.map);
@@ -254,18 +254,7 @@ export class Game extends EventEmitter {
         }
     }
 
-    getRotatingGameCell() {
-        for (let i = 0; i < this.gameState.map.length; i++) {
-            for (let j = 0; j < this.gameState.map[0].length; j++) {
-                if (this.gameState.map[i][j].constructor === RotatingMovingGameCell) {
-                    return {
-                        x: i,
-                        y: j
-                    }
-                }
-            }
-        }
-    }
+
 
     public getWidth(): number {
         return this.GAMEBOARD_CELL_SIZE * this.GAMEBOARD_COLUMNS;

@@ -1,4 +1,7 @@
+export const ACTION_TYPES = {
+    SET_GAME_STATE: 'setGameState',
+}
 export const setGameState = (gameState: string) => ({
-    type: 'SET_GAME_STATE',
+    type: ACTION_TYPES.SET_GAME_STATE,
     gameState: gameState
 });
