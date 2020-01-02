@@ -1,15 +1,22 @@
 import { GameState, MovingGameCell, GameCell, BlockGameCell, RotatingMovingGameCell } from "./GameState";
-import { SHAPES, H_SHAPE } from "../game/pieceDefinition/pieceDefinition";
+import { SHAPES } from "../game/pieceDefinition/pieceDefinition";
 import cloneDeep from 'lodash.clonedeep';
-export class Game {
+import { EventEmitter } from "events";
+export const GAME_STATE = {
+    LOOSE: 'loose',
+    NEW_GAME: 'newGame',
+}
+export class Game extends EventEmitter {
 
     public readonly GAMEBOARD_ROWS = 15;
     public readonly GAMEBOARD_COLUMNS = 10;
     public readonly GAMEBOARD_CELL_SIZE = 50;
     public gameState: GameState;
-
+    private state: string;
     constructor() {
+        super();
         this.gameState = new GameState();
+        this.state = GAME_STATE.NEW_GAME;
     }
 
     public movePiece(direction: number) {
@@ -30,8 +37,12 @@ export class Game {
         const piece = SHAPES[randomIndex];
         const mapWithAddedPiece = this.gameState.map;
         const middle = Math.floor(mapWithAddedPiece.length / 2);
+        let wasCollision = false;
         for (let i = 0; i < piece.length; i++) {
             for (let j = 0; j < piece[0].length; j++) {
+                if (mapWithAddedPiece[middle + i][j].constructor != GameCell) {
+                    wasCollision = true;
+                }
                 if (piece[i][j] != 0) {
                     if (piece[i][j] === 2) {
                         mapWithAddedPiece[middle + i][j] = new RotatingMovingGameCell();
@@ -42,7 +53,14 @@ export class Game {
                 }
             }
         }
-        this.gameState.setNewMap(mapWithAddedPiece);
+        if (!wasCollision) {
+            this.gameState.setNewMap(mapWithAddedPiece);
+        } else {
+            this.gameState.setNewMap(mapWithAddedPiece);
+            console.log('Was collision!!!!!!!');
+            this.state = GAME_STATE.LOOSE;
+            this.emit('GameLoose');
+        }
     }
 
     public animate() {
@@ -92,13 +110,11 @@ export class Game {
                 }
             }
             if (toRemove) {
-                for(let x= 0; x<mapWithAddedPiece.length;x++) {
-                    console.log(mapWithAddedPiece.length);                
+                for (let x = 0; x < mapWithAddedPiece.length; x++) {
+                    console.log(mapWithAddedPiece.length);
                     mapWithAddedPiece[x].splice(j, 1)
                     mapWithAddedPiece[x] = [new GameCell()].concat(mapWithAddedPiece[x]);
                 }
-                
-
             }
         }
         this.gameState.setNewMap(mapWithAddedPiece);
@@ -257,6 +273,10 @@ export class Game {
 
     public getHeight(): number {
         return this.GAMEBOARD_CELL_SIZE * this.GAMEBOARD_ROWS;
+    }
+
+    public getState(): string {
+        return this.state;
     }
 
     private rotatePoint(cx: number, cy: number, x: number, y: number, angle: number): any {
