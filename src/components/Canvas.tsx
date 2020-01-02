@@ -13,7 +13,6 @@ class GameBoard extends React.Component {
     componentDidMount() {
         this.renderGameBoard();
         this.game.insertNewPiece();
-        //setTimeout(() => this.game.insertNewPiece(), 2000);
         this.intervalId = setInterval(() => {
             this.renderGameBoard();
             this.game.animate();

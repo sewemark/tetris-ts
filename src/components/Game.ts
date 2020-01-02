@@ -81,10 +81,10 @@ export class Game {
         }
         this.checkIfLinesToRemove();
     }
+
     public checkIfLinesToRemove() {
         let mapWithAddedPiece = cloneDeep(this.gameState.map);
         for (let j = 0; j < mapWithAddedPiece[0].length; j++) {
-
             let toRemove = true;
             for (let i = 0; i < mapWithAddedPiece.length; i++) {
                 if (mapWithAddedPiece[i][j].constructor !== BlockGameCell) {
@@ -92,12 +92,12 @@ export class Game {
                 }
             }
             if (toRemove) {
-                console.log(mapWithAddedPiece.length);                
-                mapWithAddedPiece.slice(j, );
-                console.log(mapWithAddedPiece.length);
-                const panT = Array.from(Array(mapWithAddedPiece[0].length).keys()).map(x => new GameCell())
-                    console.log(panT);
-                mapWithAddedPiece = [...mapWithAddedPiece,panT];
+                for(let x= 0; x<mapWithAddedPiece.length;x++) {
+                    console.log(mapWithAddedPiece.length);                
+                    mapWithAddedPiece[x].splice(j, 1)
+                    mapWithAddedPiece[x] = [new GameCell()].concat(mapWithAddedPiece[x]);
+                }
+                
 
             }
         }
@@ -227,6 +227,7 @@ export class Game {
         }
         return gameBoard;
     }
+
     markAllMovingCellsAsGameCells() {
         for (let i = 0; i < this.gameState.map.length; i++) {
             for (let j = 0; j < this.gameState.map[0].length; j++) {
