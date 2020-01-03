@@ -3,6 +3,7 @@ import { Color } from "csstype";
 
 
 export class GameCell {
+   
     protected readonly GAMEBOARD_ROWS = 15;
     protected readonly GAMEBOARD_COLUMNS = 10;
     protected readonly GAMEBOARD_CELL_SIZE = 50;
@@ -26,8 +27,16 @@ export class GameCell {
         return false;
     }
 
+    public canMoveDown() {
+        return false;
+    }
+
     public canRote() {
         return false;
+    }
+
+    public isReplaceable() {
+        return true;
     }
 }
 
@@ -44,8 +53,16 @@ export class MovingGameCell extends GameCell {
         return true;
     }
 
+    public canMoveDown() {
+        return true;
+    }
+
     public canRote() {
         return true;
+    }
+
+    public isReplaceable() {
+        return false;
     }
 }
 
@@ -53,16 +70,8 @@ export class BlockGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
         this.drawCell(ctx, x,y, 'green');
     }
-
-    public canMoveLeft() {
-        return false;
-    }
-
-    public canMoveRight() {
-        return false;
-    }
-
-    public canRote() {
+    
+    public isReplaceable() {
         return false;
     }
 }
@@ -80,7 +89,11 @@ export class RotatingMovingGameCell extends GameCell {
         return true;
     }
 
-    public canRote() {
+    public canMoveDown() {
+        return true;
+    }
+
+    public isReplaceable() {
         return false;
     }
 }
@@ -132,7 +145,7 @@ export class GameState {
     clearMovingGameCells(gameBoard: any) {
         for (let i = 0; i < gameBoard.length; i++) {
             for (let j = 0; j < gameBoard[0].length; j++) {
-                if (gameBoard[i][j].constructor === MovingGameCell ||gameBoard[i][j].constructor=== RotatingMovingGameCell ) {
+                if (gameBoard[i][j].constructor === MovingGameCell) {
                     gameBoard[i][j] = new GameCell();
                 }
             }

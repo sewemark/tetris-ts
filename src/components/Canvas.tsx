@@ -3,6 +3,7 @@ import { Game, GAME_STATE } from './Game';
 import PopupDialog from './PopupDialog';
 import { connect } from 'react-redux'
 import { setGameState } from '../actions'
+import { MathUtil } from '../utils/MathUtil';
 
 class GameBoard extends React.Component {
     private readonly game: Game;
@@ -10,7 +11,7 @@ class GameBoard extends React.Component {
 
     constructor(props: object) {
         super(props);
-        this.game = new Game();
+        this.game = new Game(new MathUtil());
         this.game.on('GameLoose', ()=> {
             (this.props as any).setGameState(GAME_STATE.LOOSE);
             this.renderGameBoard();
@@ -32,10 +33,30 @@ class GameBoard extends React.Component {
     onArrowsKeyDownListener(event: any): void {
         const keyCode = event.keyCode;
         if (keyCode >= 37 && keyCode <= 40) {
-            this.game.movePiece(keyCode)
+            this.movePiece(keyCode)
             this.renderGameBoard();
         }
     }
+
+    public movePiece(direction: number) {
+        switch (direction) {
+            case 37:
+                this.game.moveLeft();
+                break;
+            case 38:
+                this.game.rotate();
+                break;
+            case 39:
+                this.game.moveRight();
+                break;
+            case 40:
+                this.game.down();
+                break;
+            default:
+                break;
+        }
+    }
+
 
     renderGameBoard() {
         const canvas = this.refs.canvas as any;
