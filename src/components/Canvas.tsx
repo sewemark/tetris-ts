@@ -4,6 +4,7 @@ import PopupDialog from './PopupDialog';
 import { connect } from 'react-redux'
 import { setGameState } from '../actions'
 import { MathUtil } from '../utils/MathUtil';
+import { MovingCellFactory } from './GameState';
 
 class GameBoard extends React.Component {
     private readonly game: Game;
@@ -11,7 +12,7 @@ class GameBoard extends React.Component {
 
     constructor(props: object) {
         super(props);
-        this.game = new Game(new MathUtil());
+        this.game = new Game(new MathUtil(), new MovingCellFactory());
         this.game.on('GameLoose', ()=> {
             (this.props as any).setGameState(GAME_STATE.LOOSE);
             this.renderGameBoard();
@@ -56,7 +57,6 @@ class GameBoard extends React.Component {
                 break;
         }
     }
-
 
     renderGameBoard() {
         const canvas = this.refs.canvas as any;

@@ -1,4 +1,4 @@
-import { GameState, MovingGameCell, GameCell, BlockGameCell, RotatingMovingGameCell, GameCellPosition } from "./GameState";
+import { GameState, MovingGameCell, GameCell, BlockGameCell, RotatingMovingGameCell, GameCellPosition, IMovingCellFactory } from "./GameState";
 import { SHAPES } from "../game/pieceDefinition/pieceDefinition";
 import cloneDeep from 'lodash.clonedeep';
 import { EventEmitter } from "events";
@@ -14,13 +14,13 @@ export class Game extends EventEmitter {
     public readonly GAMEBOARD_CELL_SIZE = 50;
     public gameState: GameState;
     private mathUtil: IMathUtil;
-    private state: string;
+    private movingCellFactory: IMovingCellFactory;
 
-    constructor(mathUtil: IMathUtil) {
+    constructor(mathUtil: IMathUtil, movingCellFactory: IMovingCellFactory) {
         super();
         this.mathUtil = mathUtil;
         this.gameState = new GameState();
-        this.state = GAME_STATE.NEW_GAME;
+        this.movingCellFactory = movingCellFactory;
     }
 
     public insertNewPiece() {
@@ -53,11 +53,7 @@ export class Game extends EventEmitter {
                     if (j + 1 < mapWithAddedPiece[0].length) {
                         if (mapWithAddedPiece[i][j + 1].isReplaceable()) {
                             wasMoved = true;
-                            if (mapWithAddedPiece[i][j].constructor === MovingGameCell) {
-                                mapWithAddedPiece[i][j + 1] = new MovingGameCell();
-                            } else if (mapWithAddedPiece[i][j].constructor === RotatingMovingGameCell) {
-                                mapWithAddedPiece[i][j + 1] = new RotatingMovingGameCell();
-                            }
+                            mapWithAddedPiece[i][j + 1] = this.movingCellFactory.clone(mapWithAddedPiece[i][j]);
                             mapWithAddedPiece[i][j] = new GameCell();
                         } else {
                             wasMoved = false;
@@ -76,6 +72,28 @@ export class Game extends EventEmitter {
         this.checkIfLinesToRemove();
     }
 
+    public down() {
+        let wasCollistion = true;
+        const mapWithAddedPiece = cloneDeep(this.gameState.map);
+        for (let j = mapWithAddedPiece[0].length - 1; j >= 0; j--) {
+            for (let i = mapWithAddedPiece.length - 1; i >= 0; i--) {
+                if (mapWithAddedPiece[i][j].canMoveDown()) {
+                    if (j + 1 < mapWithAddedPiece[0].length) {
+                        if (mapWithAddedPiece[i][j + 1].isReplaceable()) {
+                            mapWithAddedPiece[i][j + 1] = this.movingCellFactory.clone(mapWithAddedPiece[i][j]);
+                            mapWithAddedPiece[i][j] = new GameCell();
+                        }
+                    } else {
+                        wasCollistion = true;
+                    }
+                }
+            }
+        }
+        if (!wasCollistion) {
+            this.gameState.setNewMap(mapWithAddedPiece);
+        }
+    }
+
     public checkIfLinesToRemove() {
         let mapWithAddedPiece = cloneDeep(this.gameState.map);
         for (let j = 0; j < mapWithAddedPiece[0].length; j++) {
@@ -87,7 +105,6 @@ export class Game extends EventEmitter {
             }
             if (toRemove) {
                 for (let x = 0; x < mapWithAddedPiece.length; x++) {
-                    console.log(mapWithAddedPiece.length);
                     mapWithAddedPiece[x].splice(j, 1)
                     mapWithAddedPiece[x] = [new GameCell()].concat(mapWithAddedPiece[x]);
                 }
@@ -154,32 +171,6 @@ export class Game extends EventEmitter {
         }
     }
 
-    public down() {
-        const mapWithAddedPiece = cloneDeep(this.gameState.map);
-        let wasCollistion = true;
-        for (let j = mapWithAddedPiece[0].length - 1; j >= 0; j--) {
-            for (let i = mapWithAddedPiece.length - 1; i >= 0; i--) {
-                if (mapWithAddedPiece[i][j].canMoveDown()) {
-                    if (j + 1 < mapWithAddedPiece[0].length) {
-                        if (mapWithAddedPiece[i][j + 1].constructor === GameCell) {
-                            if (mapWithAddedPiece[i][j].constructor === MovingGameCell) {
-                                mapWithAddedPiece[i][j + 1] = new MovingGameCell();
-                            } else if (mapWithAddedPiece[i][j].constructor === RotatingMovingGameCell) {
-                                mapWithAddedPiece[i][j + 1] = new RotatingMovingGameCell();
-                            }
-                            mapWithAddedPiece[i][j] = new GameCell();
-                        }
-                    } else {
-                        wasCollistion = true;
-                    }
-                }
-            }
-        }
-        if (!wasCollistion) {
-            this.gameState.setNewMap(mapWithAddedPiece);
-        }
-    }
-
     public moveLeft() {
         const mapWithAddedPiece = cloneDeep(this.gameState.map);
         let wasCollision = false;
@@ -225,9 +216,6 @@ export class Game extends EventEmitter {
         return piece === 2 ? new RotatingMovingGameCell() : new MovingGameCell();
     }
 }
-
-
-
 
 // public moveAbstract(offSet: GameCellPosition) {
 //     let wasCollision = false;

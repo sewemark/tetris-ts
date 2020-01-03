@@ -1,13 +1,27 @@
 import { NoRotatingPointFoundError } from "../errors/NoRotatingPointFoundError";
 import { Color } from "csstype";
 
-
+export interface IMovingCellFactory {
+    clone(gameCell: GameCell): GameCell;
+}
+export class MovingCellFactory implements IMovingCellFactory{
+    public clone(gameCell: GameCell): GameCell {
+        switch(gameCell.constructor) {
+            case MovingGameCell:
+                return new MovingGameCell();
+            case RotatingMovingGameCell:
+                return new RotatingMovingGameCell();
+            default:
+                return new GameCell();
+        }
+    }
+}
 export class GameCell {
-   
+
     protected readonly GAMEBOARD_ROWS = 15;
     protected readonly GAMEBOARD_COLUMNS = 10;
     protected readonly GAMEBOARD_CELL_SIZE = 50;
-    
+
     public render(ctx: any, x: number, y: number) {
         this.drawCell(ctx, x, y, 'red');
     }
@@ -42,7 +56,7 @@ export class GameCell {
 
 export class MovingGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
-       this.drawCell(ctx, x,y, 'blue');
+        this.drawCell(ctx, x, y, 'blue');
     }
 
     public canMoveLeft() {
@@ -68,9 +82,9 @@ export class MovingGameCell extends GameCell {
 
 export class BlockGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
-        this.drawCell(ctx, x,y, 'green');
+        this.drawCell(ctx, x, y, 'green');
     }
-    
+
     public isReplaceable() {
         return false;
     }
@@ -78,7 +92,7 @@ export class BlockGameCell extends GameCell {
 
 export class RotatingMovingGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
-        this.drawCell(ctx, x,y, 'yellow');
+        this.drawCell(ctx, x, y, 'yellow');
     }
 
     public canMoveLeft() {
