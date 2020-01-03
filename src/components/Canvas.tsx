@@ -10,7 +10,7 @@ class GameBoard extends React.Component {
 
     constructor(props: object) {
         super(props);
-        this.game = new Game;
+        this.game = new Game();
         this.game.on('GameLoose', ()=> {
             (this.props as any).setGameState(GAME_STATE.LOOSE);
             this.renderGameBoard();
@@ -25,11 +25,11 @@ class GameBoard extends React.Component {
             this.renderGameBoard();
             this.game.animate();
         }, 500);
-        const bindedKeyDownListener = this.escFunction.bind(this);
-        document.addEventListener("keydown", bindedKeyDownListener, false);
+        const bindedOnArrowsKeyDownListener = this.onArrowsKeyDownListener.bind(this);
+        document.addEventListener("keydown", bindedOnArrowsKeyDownListener, false);
     }
 
-    escFunction(event: any): void {
+    onArrowsKeyDownListener(event: any): void {
         const keyCode = event.keyCode;
         if (keyCode >= 37 && keyCode <= 40) {
             this.game.movePiece(keyCode)

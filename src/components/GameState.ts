@@ -17,11 +17,35 @@ export class GameCell {
         ctx.fillRect(x * this.GAMEBOARD_CELL_SIZE + 2, y * this.GAMEBOARD_CELL_SIZE + 2, this.GAMEBOARD_CELL_SIZE - 2, this.GAMEBOARD_CELL_SIZE - 2);
         ctx.stroke();
     }
+
+    public canMoveLeft() {
+        return false;
+    }
+
+    public canMoveRight() {
+        return false;
+    }
+
+    public canRote() {
+        return false;
+    }
 }
 
 export class MovingGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
        this.drawCell(ctx, x,y, 'blue');
+    }
+
+    public canMoveLeft() {
+        return true;
+    }
+
+    public canMoveRight() {
+        return true;
+    }
+
+    public canRote() {
+        return true;
     }
 }
 
@@ -29,11 +53,35 @@ export class BlockGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
         this.drawCell(ctx, x,y, 'green');
     }
+
+    public canMoveLeft() {
+        return false;
+    }
+
+    public canMoveRight() {
+        return false;
+    }
+
+    public canRote() {
+        return false;
+    }
 }
 
 export class RotatingMovingGameCell extends GameCell {
     render(ctx: any, x: number, y: number) {
         this.drawCell(ctx, x,y, 'yellow');
+    }
+
+    public canMoveLeft() {
+        return true;
+    }
+
+    public canMoveRight() {
+        return true;
+    }
+
+    public canRote() {
+        return false;
     }
 }
 
@@ -79,5 +127,26 @@ export class GameState {
             }
         }
         throw new NoRotatingPointFoundError();
+    }
+
+    clearMovingGameCells(gameBoard: any) {
+        for (let i = 0; i < gameBoard.length; i++) {
+            for (let j = 0; j < gameBoard[0].length; j++) {
+                if (gameBoard[i][j].constructor === MovingGameCell ||gameBoard[i][j].constructor=== RotatingMovingGameCell ) {
+                    gameBoard[i][j] = new GameCell();
+                }
+            }
+        }
+        return gameBoard;
+    }
+
+    markAllMovingCellsAsGameCells() {
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map[0].length; j++) {
+                if (this.map[i][j].constructor === MovingGameCell || this.map[i][j].constructor === RotatingMovingGameCell) {
+                    this.map[i][j] = new BlockGameCell();
+                }
+            }
+        }
     }
 }
