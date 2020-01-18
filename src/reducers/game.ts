@@ -1,5 +1,5 @@
-import { GAME_STATE } from "../components/Game"
 import { ACTION_TYPES } from "../actions"
+import { GAME_STATE } from "../game/Game"
 
 const game = (state = { gameState: GAME_STATE.NEW_GAME }, action: any) => {
     switch (action.type) {

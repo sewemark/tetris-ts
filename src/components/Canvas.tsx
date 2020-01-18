@@ -1,10 +1,11 @@
 import React from 'react';
-import { Game, GAME_STATE } from './Game';
 import PopupDialog from './PopupDialog';
 import { connect } from 'react-redux'
 import { setGameState } from '../actions'
 import { MathUtil } from '../utils/MathUtil';
-import { MovingCellFactory } from './GameState';
+import { Game, GAME_STATE } from '../game/Game';
+import { MovingCellFactory } from '../game/MovingCellFactory';
+import { GameCellPosition } from '../game/GameCellPosition';
 
 class GameBoard extends React.Component {
     private readonly game: Game;
@@ -13,7 +14,7 @@ class GameBoard extends React.Component {
     constructor(props: object) {
         super(props);
         this.game = new Game(new MathUtil(), new MovingCellFactory());
-        this.game.on('GameLoose', ()=> {
+        this.game.on('GameLoose', () => {
             (this.props as any).setGameState(GAME_STATE.LOOSE);
             this.renderGameBoard();
             clearInterval(this.intervalId);
@@ -64,11 +65,11 @@ class GameBoard extends React.Component {
         for (let i = 0; i < this.game.GAMEBOARD_COLUMNS; i++) {
             for (let j = 0; j < this.game.GAMEBOARD_ROWS; j++) {
                 ctx.beginPath();
-                ctx.strokeStyle = "green";
-                ctx.lineWidth = "6";
+                ctx.strokeStyle = "#A8D0E6";
+                ctx.lineWidth = "0.1";
                 ctx.rect(i * this.game.GAMEBOARD_CELL_SIZE, j * this.game.GAMEBOARD_CELL_SIZE, this.game.GAMEBOARD_CELL_SIZE, this.game.GAMEBOARD_CELL_SIZE);
                 ctx.stroke();
-                this.game.gameState.getCell(i, j).render(ctx, i, j);
+                this.game.gameState.getCell(i, j).render(ctx, new GameCellPosition(i, j));
             }
         }
     }
@@ -77,8 +78,8 @@ class GameBoard extends React.Component {
         const gameProps: any = (this.props as any).game;
         return (
             <div>
-                {gameProps.gameState === GAME_STATE.LOOSE ? <PopupDialog /> : ''}
-                <canvas style={{ border: '1px solid black' }} ref="canvas" width={this.game.getWidth()} height={this.game.getHeight()} />
+                {gameProps.gameState === GAME_STATE.LOOSE ? <PopupDialog  actionName="New game" title="You loose"/> : ''}
+                <canvas style={{}} ref="canvas" width={this.game.getWidth()} height={this.game.getHeight()} />
             </div>
         )
     }

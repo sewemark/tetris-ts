@@ -1,5 +1,6 @@
 import React from 'react';
-import './App.css';
+import './scss/index.scss';
+import './App.scss';
 import GameBoard from './components/Canvas';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
@@ -10,7 +11,7 @@ const store = createStore(rootReducer)
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <div className="App">
+      <div className="gameContainer">
         <GameBoard />
       </div>
     </Provider>

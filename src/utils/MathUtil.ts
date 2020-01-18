@@ -1,4 +1,4 @@
-import { GameCellPosition } from "../components/GameState";
+import { GameCellPosition } from "../game/GameCellPosition";
 
 export interface IMathUtil {
     rotatePoint(cx: number, cy: number, x: number, y: number, angle: number): GameCellPosition;
