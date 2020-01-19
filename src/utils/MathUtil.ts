@@ -18,11 +18,11 @@ export class MathUtil implements IMathUtil {
     y: number,
     angle: number,
   ): GameCellPosition {
-    let radians = (Math.PI / 180) * angle,
-      cos = Math.cos(radians),
-      sin = Math.sin(radians),
-      nx = cos * (x - cx) + sin * (y - cy) + cx,
-      ny = cos * (y - cy) - sin * (x - cx) + cy;
+    const radians = (Math.PI / 180) * angle;
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+    const nx = cos * (x - cx) + sin * (y - cy) + cx;
+    const ny = cos * (y - cy) - sin * (x - cx) + cy;
     return new GameCellPosition(nx, ny);
   }
 }

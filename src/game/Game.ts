@@ -40,7 +40,7 @@ export class Game extends EventEmitter {
         if (!mapWithAddedPiece[middle + i][j].isReplaceable()) {
           wasCollision = true;
         }
-        if (piece[i][j] != 0) {
+        if (piece[i][j] !== 0) {
           mapWithAddedPiece[middle + i][j] = this.createNewGameCell(
             piece[i][j],
           );

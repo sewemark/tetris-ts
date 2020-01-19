@@ -9,6 +9,7 @@ const game = (
     case ACTION_TYPES.SET_GAME_STATE:
       return {
         ...state,
+        gameScore: 0,
         gameState: action.gameState,
       };
     case ACTION_TYPES.SET_GAME_SCORE:

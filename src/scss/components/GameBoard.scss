@@ -1,3 +1,9 @@
 .gameBoard {
-    grid-column: 1;
+  grid-column: 1;
+  &__gameCanvas {
+    border-radius: 50%;
+    -webkit-box-shadow: 9px 28px 51px -23px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow: 9px 28px 51px -23px rgba(0, 0, 0, 0.7);
+    box-shadow: 9px 28px 51px -23px rgba(0, 0, 0, 0.7);
+  }
 }

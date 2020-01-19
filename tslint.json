@@ -1,5 +1,9 @@
 {
   "extends": "@screamz/aurora/tslint-react",
+  "rules": {
+    "file-name-casing": [false, { ".ts": "ignore", ".tsx": "ignore" }],
+    "no-default-export": false
+  },
   "linterOptions": {
     "exclude": ["node_modules/**/*"]
   }

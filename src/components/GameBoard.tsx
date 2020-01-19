@@ -57,6 +57,7 @@ class GameBoard extends React.Component {
   renderGameBoard() {
     const canvas = this.refs.canvas as any;
     const ctx = canvas.getContext("2d");
+    this.setShadow(ctx);
     for (let i = 0; i < this.game.GAMEBOARD_COLUMNS; i++) {
       for (let j = 0; j < this.game.GAMEBOARD_ROWS; j++) {
         ctx.beginPath();
@@ -69,11 +70,18 @@ class GameBoard extends React.Component {
           this.game.GAMEBOARD_CELL_SIZE,
         );
         ctx.stroke();
+        this.setShadow(ctx);
         this.game.gameState
           .getCell(i, j)
           .render(ctx, new GameCellPosition(i, j));
       }
     }
+  }
+  setShadow(ctx: any) {
+    ctx.shadowColor = "#000000";
+    ctx.shadowBlur = 51;
+    ctx.shadowOffsetX = 9;
+    ctx.shadowOffsetY = 28;
   }
 
   render() {
@@ -91,6 +99,7 @@ class GameBoard extends React.Component {
         )}
         <canvas
           style={{}}
+          className="gameContainer__gameCanvas"
           ref="canvas"
           width={this.game.getWidth()}
           height={this.game.getHeight()}
@@ -133,9 +142,9 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setGameState: (gameState: string) => dispatch(setGameState(gameState)),
   setGameScore: (addedGameScore: number) =>
     dispatch(setGameScore(addedGameScore)),
+  setGameState: (gameState: string) => dispatch(setGameState(gameState)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBoard);
