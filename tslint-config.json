@@ -1,0 +1,6 @@
+{
+  "extends": "@screamz/aurora/tslint-react",
+  "linterOptions": {
+    "exclude": ["node_modules/**/*"]
+  }
+}

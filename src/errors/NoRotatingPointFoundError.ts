@@ -1,2 +1,1 @@
-export class NoRotatingPointFoundError extends Error {
-}
+export class NoRotatingPointFoundError extends Error {}

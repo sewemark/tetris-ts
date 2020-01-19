@@ -1,6 +1,6 @@
 import { GameCell } from "./cells/GameCell";
 
 export interface IPieceMoveResult {
-    wasCollision: boolean;
-    mapWithAddedPiece: GameCell[][];
+  wasCollision: boolean;
+  mapWithAddedPiece: GameCell[][];
 }

@@ -1,5 +1,5 @@
 import { GameCell } from "./cells/GameCell";
 
 export interface IMovingCellFactory {
-    clone(gameCell: GameCell): GameCell;
+  clone(gameCell: GameCell): GameCell;
 }

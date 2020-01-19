@@ -21,13 +21,14 @@
     "react-scripts": "3.3.0",
     "redux": "^4.0.5",
     "redux-devtools": "^3.5.0",
-    "typescript": "~3.7.2"
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "tslint src/**/*.ts{,x}"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,5 +44,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "@screamz/aurora": "^1.0.0",
+    "prettier": "^1.19.1",
+    "tslint": "^5.20.1"
+  },
+  "prettier": "@screamz/aurora"
 }

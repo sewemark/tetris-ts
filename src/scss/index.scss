@@ -1,1 +1,7 @@
-@import 'variables.scss';
+@import './variables.scss';
+@import './base.scss';
+@import './typography.scss';
+@import './components/App.scss';
+@import './components/PopupDialog.scss';
+@import './components/GameBoard.scss';
+@import './components/GameScore.scss';
