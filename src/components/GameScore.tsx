@@ -9,9 +9,7 @@ class GameScore extends React.Component {
   render() {
     return (
       <div className="gameContainer__gameScore">
-        <h2 className="heading-2">
-          Your score {(this.props as any).gameScore}
-        </h2>
+        <h2 className="heading-2">Your score {(this.props as any).gameScore}</h2>
       </div>
     );
   }

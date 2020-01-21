@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { setGameScore, setGameState } from "../actions";
+import { GameLooseEvent } from "../events/GameLooseEvent";
+import { LineRemovedEvent } from "../events/LineRemovedEvent";
 import { Game, GAME_STATE } from "../game/Game";
 import { GameCellPosition } from "../game/GameCellPosition";
 import { MovingCellFactory } from "../game/MovingCellFactory";
@@ -8,23 +10,23 @@ import { MathUtil } from "../utils/MathUtil";
 import PopupDialog from "./PopupDialog";
 
 const LINE_REMOVED_SCORE = 1;
+const GAME_BOARD_RENDER_INTERVAL_MS = 500;
 
 class GameBoard extends React.Component {
   private game: Game;
   private intervalId: any;
+  private bindedOnArrowsKeyDownListener: EventListener;
 
   constructor(props: object) {
     super(props);
     this.game = new Game(new MathUtil(), new MovingCellFactory());
+    this.bindedOnArrowsKeyDownListener = this.onArrowsKeyDownListener.bind(this);
     this.initGame();
   }
 
   componentDidMount() {
     this.startGame();
-    const bindedOnArrowsKeyDownListener = this.onArrowsKeyDownListener.bind(
-      this,
-    );
-    document.addEventListener("keydown", bindedOnArrowsKeyDownListener, false);
+    document.addEventListener("keydown", this.bindedOnArrowsKeyDownListener, false);
   }
 
   onArrowsKeyDownListener(event: any): void {
@@ -36,6 +38,7 @@ class GameBoard extends React.Component {
   }
 
   movePiece(direction: number) {
+    
     switch (direction) {
       case 37:
         this.game.moveLeft();
@@ -109,7 +112,6 @@ class GameBoard extends React.Component {
   }
 
   private setNewGame() {
-    console.log("setting new game");
     (this.props as any).setGameState(GAME_STATE.NEW_GAME);
     this.initGame();
     this.startGame();
@@ -121,17 +123,17 @@ class GameBoard extends React.Component {
     this.intervalId = setInterval(() => {
       this.renderGameBoard();
       this.game.animate();
-    }, 500);
+    }, GAME_BOARD_RENDER_INTERVAL_MS);
   }
 
   private initGame() {
     this.game = new Game(new MathUtil(), new MovingCellFactory());
-    this.game.on("GameLoose", () => {
+    this.game.on(GameLooseEvent.EVENT_NAME, () => {
       (this.props as any).setGameState(GAME_STATE.LOOSE);
       this.renderGameBoard();
       clearInterval(this.intervalId);
     });
-    this.game.on("LineRemoved", () => {
+    this.game.on(LineRemovedEvent.EVENT_NAME, () => {
       (this.props as any).setGameScore(LINE_REMOVED_SCORE);
     });
   }
