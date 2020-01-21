@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { setGameScore, setGameState } from "../actions";
+import { KeyCode } from "../common/KeyCodes";
 import { GameLooseEvent } from "../events/GameLooseEvent";
 import { LineRemovedEvent } from "../events/LineRemovedEvent";
 import { Game, GAME_STATE } from "../game/Game";
@@ -16,12 +17,16 @@ class GameBoard extends React.Component {
   private game: Game;
   private intervalId: any;
   private bindedOnArrowsKeyDownListener: EventListener;
-
+  private pieceMovesAdapter: Map<KeyCode, () => void> = new Map();
   constructor(props: object) {
     super(props);
     this.game = new Game(new MathUtil(), new MovingCellFactory());
     this.bindedOnArrowsKeyDownListener = this.onArrowsKeyDownListener.bind(this);
     this.initGame();
+    this.pieceMovesAdapter.set(KeyCode.left, this.game.moveLeft);
+    this.pieceMovesAdapter.set(KeyCode.up, this.game.rotate);
+    this.pieceMovesAdapter.set(KeyCode.right, this.game.moveRight);
+    this.pieceMovesAdapter.set(KeyCode.down, this.game.down);
   }
 
   componentDidMount() {
@@ -31,29 +36,12 @@ class GameBoard extends React.Component {
 
   onArrowsKeyDownListener(event: any): void {
     const keyCode = event.keyCode;
-    if (keyCode >= 37 && keyCode <= 40) {
-      this.movePiece(keyCode);
+    if (keyCode >= KeyCode.left.value() && keyCode <= keyCode.up.value()) {
+      const delegate = this.pieceMovesAdapter.get(keyCode);
+      if (delegate) {
+        delegate();
+      }
       this.renderGameBoard();
-    }
-  }
-
-  movePiece(direction: number) {
-    
-    switch (direction) {
-      case 37:
-        this.game.moveLeft();
-        break;
-      case 38:
-        this.game.rotate();
-        break;
-      case 39:
-        this.game.moveRight();
-        break;
-      case 40:
-        this.game.down();
-        break;
-      default:
-        break;
     }
   }
 
@@ -66,17 +54,10 @@ class GameBoard extends React.Component {
         ctx.beginPath();
         ctx.strokeStyle = "#A8D0E6";
         ctx.lineWidth = "0.1";
-        ctx.rect(
-          i * this.game.GAMEBOARD_CELL_SIZE,
-          j * this.game.GAMEBOARD_CELL_SIZE,
-          this.game.GAMEBOARD_CELL_SIZE,
-          this.game.GAMEBOARD_CELL_SIZE,
-        );
+        ctx.rect(i * this.game.GAMEBOARD_CELL_SIZE, j * this.game.GAMEBOARD_CELL_SIZE, this.game.GAMEBOARD_CELL_SIZE, this.game.GAMEBOARD_CELL_SIZE);
         ctx.stroke();
         this.setShadow(ctx);
-        this.game.gameState
-          .getCell(i, j)
-          .render(ctx, new GameCellPosition(i, j));
+        this.game.gameState.getCell(i, j).render(ctx, new GameCellPosition(i, j));
       }
     }
   }
@@ -92,21 +73,11 @@ class GameBoard extends React.Component {
     return (
       <div className="gameContainer__gameBoard">
         {gameProps.gameState === GAME_STATE.LOOSE ? (
-          <PopupDialog
-            setNewGame={() => this.setNewGame.call(this)}
-            actionName="New game"
-            title="You loose"
-          />
+          <PopupDialog setNewGame={() => this.setNewGame.call(this)} actionName="New game" title="You loose" />
         ) : (
           ""
         )}
-        <canvas
-          style={{}}
-          className="gameContainer__gameCanvas"
-          ref="canvas"
-          width={this.game.getWidth()}
-          height={this.game.getHeight()}
-        />
+        <canvas style={{}} className="gameContainer__gameCanvas" ref="canvas" width={this.game.getWidth()} height={this.game.getHeight()} />
       </div>
     );
   }
@@ -144,8 +115,7 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setGameScore: (addedGameScore: number) =>
-    dispatch(setGameScore(addedGameScore)),
+  setGameScore: (addedGameScore: number) => dispatch(setGameScore(addedGameScore)),
   setGameState: (gameState: string) => dispatch(setGameState(gameState)),
 });
 

@@ -16,6 +16,7 @@ export const GAME_STATE = {
 };
 
 export class Game extends EventEmitter {
+ 
   readonly GAMEBOARD_ROWS = 15;
   readonly GAMEBOARD_COLUMNS = 10;
   readonly GAMEBOARD_CELL_SIZE = 50;
