@@ -1,0 +1,6 @@
+export const GAME_BOARD_STROKE_COLOR = "#A8D0E6";
+export const GAME_BOARD_LINE_WIDTH = "0.1";
+export const GAME_BOARD_SHADOW_COLOR = "#000000";
+export const GAME_BOARD_SHADOW_BLUR = 51;
+export const GAME_BOARD_SHADOW_OFFSET_X = 9;
+export const GAME_BOARD_SHADOW_OFFSET_Y = 28;

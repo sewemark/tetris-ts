@@ -4,7 +4,8 @@ import { LineRemovedEvent } from "../events/LineRemovedEvent";
 import { MathUtil } from "../utils/MathUtil";
 import { Game, GAME_STATE } from "./Game";
 import { MovingCellFactory } from "./MovingCellFactory";
-import { ICanvasGameRender, CanvasGameRenderer } from "./CanvasGameRenderer";
+import { CanvasGameRenderer } from "./render/CanvasGameRenderer";
+import { ICanvasGameRender } from "./render/ICanvasGameRender";
 
 const LINE_REMOVED_SCORE = 1;
 const GAME_BOARD_RENDER_INTERVAL_MS = 500;
@@ -59,8 +60,6 @@ export class GameInitializer {
 
   triggerEvent(keyCode: number) {
     const delegate = this.pieceMovesAdapter.get(keyCode);
-    console.log(delegate);
-    console.log(keyCode);
     if (delegate) {
       delegate();
     }
