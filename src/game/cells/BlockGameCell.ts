@@ -1,20 +1,20 @@
+import { BLOCKED_GAME_BLOCK_COLOR } from "../../common/CanvasConstats";
+import { GameCellPosition } from "../GameCellPosition";
 import { GameCell } from "./GameCell";
 import { ICanvasRenderableElement } from "./ICanvasRenderableElement";
-import { GameCellPosition } from "../GameCellPosition";
 
-export class BlockGameCell extends GameCell
-  implements ICanvasRenderableElement {
-  protected color: string = "#F8E9A1";
+export class BlockGameCell extends GameCell implements ICanvasRenderableElement {
+  protected color: string = BLOCKED_GAME_BLOCK_COLOR;
 
-  public render(ctx: CanvasRenderingContext2D, gameCell: GameCellPosition) {
+  render(ctx: CanvasRenderingContext2D, gameCell: GameCellPosition) {
     this.drawCell(ctx, gameCell);
   }
 
-  public isReplaceable() {
+  isReplaceable() {
     return false;
   }
 
-  public canBeRemovedInline() {
+  canBeRemovedInline() {
     return true;
   }
 }

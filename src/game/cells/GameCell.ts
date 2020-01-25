@@ -1,11 +1,9 @@
+import { GAME_BLOCK_BORDER_WIDTH, GAME_BLOCK_COLOR, GAMEBOARD_CELL_SIZE } from "../../common/CanvasConstats";
 import { GameCellPosition } from "../GameCellPosition";
 import { ICanvasRenderableElement } from "./ICanvasRenderableElement";
 
 export class GameCell implements ICanvasRenderableElement {
-  protected readonly GAMEBOARD_ROWS = 15;
-  protected readonly GAMEBOARD_COLUMNS = 10;
-  protected readonly GAMEBOARD_CELL_SIZE = 50;
-  protected color: string = "#F76C6C";
+  protected color: string = GAME_BLOCK_COLOR;
 
   render(ctx: CanvasRenderingContext2D, gameCell: GameCellPosition) {
     this.drawCell(ctx, gameCell);
@@ -34,14 +32,15 @@ export class GameCell implements ICanvasRenderableElement {
   canBeRemovedInline() {
     return false;
   }
-  protected drawCell(ctx: any, gameCell: GameCellPosition) {
+
+  protected drawCell(ctx: CanvasRenderingContext2D, gameCell: GameCellPosition) {
     ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.fillRect(
-      gameCell.x * this.GAMEBOARD_CELL_SIZE + 2,
-      gameCell.y * this.GAMEBOARD_CELL_SIZE + 2,
-      this.GAMEBOARD_CELL_SIZE - 2,
-      this.GAMEBOARD_CELL_SIZE - 2,
+      gameCell.x * GAMEBOARD_CELL_SIZE + GAME_BLOCK_BORDER_WIDTH,
+      gameCell.y * GAMEBOARD_CELL_SIZE + GAME_BLOCK_BORDER_WIDTH,
+      GAMEBOARD_CELL_SIZE - GAME_BLOCK_BORDER_WIDTH,
+      GAMEBOARD_CELL_SIZE - GAME_BLOCK_BORDER_WIDTH,
     );
     ctx.stroke();
   }

@@ -1,28 +1,28 @@
+import { ROTATING_GAME_BLOCK_COLOR } from "../../common/CanvasConstats";
+import { GameCellPosition } from "../GameCellPosition";
 import { GameCell } from "./GameCell";
 import { ICanvasRenderableElement } from "./ICanvasRenderableElement";
-import { GameCellPosition } from "../GameCellPosition";
 
 export class RotatingMovingGameCell extends GameCell implements ICanvasRenderableElement {
+  protected color: string = ROTATING_GAME_BLOCK_COLOR;
 
-    protected color: string = "#24305E";
+  render(ctx: CanvasRenderingContext2D, gameCell: GameCellPosition) {
+    this.drawCell(ctx, gameCell);
+  }
 
-    public render(ctx: CanvasRenderingContext2D, gameCell: GameCellPosition) {
-        this.drawCell(ctx, gameCell);
-    }
+  canMoveLeft() {
+    return true;
+  }
 
-    public canMoveLeft() {
-        return true;
-    }
+  canMoveRight() {
+    return true;
+  }
 
-    public canMoveRight() {
-        return true;
-    }
+  canMoveDown() {
+    return true;
+  }
 
-    public canMoveDown() {
-        return true;
-    }
-
-    public isReplaceable() {
-        return false;
-    }
+  isReplaceable() {
+    return false;
+  }
 }

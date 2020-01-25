@@ -1,18 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import { setGameScore, setGameState } from "../actions";
+import { GAMEBOARD_CELL_SIZE, GAMEBOARD_COLUMNS, GAMEBOARD_ROWS } from "../common/CanvasConstats";
 import { KeyCode } from "../common/KeyCodes";
 import { GAME_STATE } from "../game/Game";
-import { GameCellPosition } from "../game/GameCellPosition";
-import { GameInitializer } from "../game/GameInitializer";
+import { GameAdapter, IGameAdapter } from "../game/GameAdapter";
 import PopupDialog from "./PopupDialog";
 
 class GameBoard extends React.Component {
   private bindedOnArrowsKeyDownListener: EventListener;
-  private gameInitialize: GameInitializer;
-  private readonly GAMEBOARD_ROWS = 15;
-  private readonly GAMEBOARD_COLUMNS = 10;
-  private readonly GAMEBOARD_CELL_SIZE = 50;
+  private gameAdapter: IGameAdapter;
 
   constructor(props: object) {
     super(props);
@@ -20,16 +17,15 @@ class GameBoard extends React.Component {
   }
 
   componentDidMount() {
-    this.gameInitialize = new GameInitializer(this.refs.canvas, (this.props as any).setGameScore, (this.props as any).setGameState);
-    this.gameInitialize.initGame();
-    this.gameInitialize.startGame();
+    this.gameAdapter = new GameAdapter(this.refs.canvas, (this.props as any).setGameScore, (this.props as any).setGameState);
+    this.gameAdapter.start();
     document.addEventListener("keydown", this.bindedOnArrowsKeyDownListener, false);
   }
 
   onArrowsKeyDownListener(event: any): void {
     const keyCode = event.keyCode;
     if (keyCode >= KeyCode.left.value() && keyCode <= KeyCode.down.value()) {
-      this.gameInitialize.triggerEvent(keyCode);
+      this.gameAdapter.triggerAction(keyCode);
     }
   }
 
@@ -49,16 +45,15 @@ class GameBoard extends React.Component {
 
   private setNewGame() {
     (this.props as any).setGameState(GAME_STATE.NEW_GAME);
-    this.gameInitialize.initGame();
-    this.gameInitialize.startGame();
+    this.gameAdapter.start();
   }
 
   private getWidth(): number {
-    return this.GAMEBOARD_CELL_SIZE * this.GAMEBOARD_COLUMNS;
+    return GAMEBOARD_CELL_SIZE * GAMEBOARD_COLUMNS;
   }
 
   private getHeight(): number {
-    return this.GAMEBOARD_CELL_SIZE * this.GAMEBOARD_ROWS;
+    return GAMEBOARD_CELL_SIZE * GAMEBOARD_ROWS;
   }
 }
 

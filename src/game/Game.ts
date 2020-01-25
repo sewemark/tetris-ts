@@ -10,15 +10,13 @@ import { GameCellPosition } from "./GameCellPosition";
 import { GameState } from "./GameState";
 import { IMovingCellFactory } from "./IMovingCellFactory";
 import { IPieceMoveResult } from "./IPieceMoveResult";
+import { GAMEBOARD_CELL_SIZE, GAMEBOARD_COLUMNS, GAMEBOARD_ROWS } from "../common/CanvasConstats";
 export const GAME_STATE = {
   LOOSE: "loose",
   NEW_GAME: "newGame",
 };
 
 export class Game extends EventEmitter {
-  readonly GAMEBOARD_ROWS = 15;
-  readonly GAMEBOARD_COLUMNS = 10;
-  readonly GAMEBOARD_CELL_SIZE = 50;
   gameState: GameState;
   private mathUtil: IMathUtil;
   private movingCellFactory: IMovingCellFactory;
@@ -187,11 +185,11 @@ export class Game extends EventEmitter {
   }
 
   getWidth(): number {
-    return this.GAMEBOARD_CELL_SIZE * this.GAMEBOARD_COLUMNS;
+    return GAMEBOARD_CELL_SIZE * GAMEBOARD_COLUMNS;
   }
 
   getHeight(): number {
-    return this.GAMEBOARD_CELL_SIZE * this.GAMEBOARD_ROWS;
+    return GAMEBOARD_CELL_SIZE * GAMEBOARD_ROWS;
   }
 
   private getNextRandomPiece() {
@@ -203,32 +201,3 @@ export class Game extends EventEmitter {
     return piece === 2 ? new RotatingMovingGameCell() : new MovingGameCell();
   }
 }
-
-// public moveAbstract(offSet: GameCellPosition) {
-//     let wasCollision = false;
-//     let mapWithAddedPiece = this.gameState.map;
-//     let mapWithAddedPiece2 = cloneDeep(this.gameState.map);
-//     mapWithAddedPiece2 = this.gameState.clearMovingGameCells(mapWithAddedPiece2);
-//     for (let j = 0; j < mapWithAddedPiece[0].length; j++) {
-//         for (let i = 0; i < mapWithAddedPiece.length; i++) {
-//             if (mapWithAddedPiece[i][j].canMoveRight()) {
-//                 if (this.canMoveToOffset(new GameCellPosition(i,j), offSet, mapWithAddedPiece2)) {
-//                     if (mapWithAddedPiece2[i + offSet.x][j + offSet.y].constructor !== BlockGameCell) {
-//                         if (mapWithAddedPiece[i][j].constructor === RotatingMovingGameCell) {
-//                             mapWithAddedPiece2[i + offSet.x][j + offSet.y] = new RotatingMovingGameCell();
-//                         } else {
-//                             mapWithAddedPiece2[i + offSet.x][j + offSet.y] = new MovingGameCell();
-//                         }
-//                         mapWithAddedPiece[i][j] = new GameCell();
-//                     }
-//                 } else {
-//                     console.log('huj12333333');
-//                     wasCollision = true;
-//                 }
-//             }
-//         }
-//     }
-//     if (!wasCollision) {
-//         this.gameState.setNewMap(mapWithAddedPiece2);
-//     }
-// }
