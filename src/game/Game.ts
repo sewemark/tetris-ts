@@ -16,7 +16,6 @@ export const GAME_STATE = {
 };
 
 export class Game extends EventEmitter {
- 
   readonly GAMEBOARD_ROWS = 15;
   readonly GAMEBOARD_COLUMNS = 10;
   readonly GAMEBOARD_CELL_SIZE = 50;
@@ -42,9 +41,7 @@ export class Game extends EventEmitter {
           wasCollision = true;
         }
         if (piece[i][j] !== 0) {
-          mapWithAddedPiece[middle + i][j] = this.createNewGameCell(
-            piece[i][j],
-          );
+          mapWithAddedPiece[middle + i][j] = this.createNewGameCell(piece[i][j]);
         }
       }
     }
@@ -78,13 +75,8 @@ export class Game extends EventEmitter {
     for (let j = mapWithAddedPiece[0].length - 1; j >= 0; j--) {
       for (let i = mapWithAddedPiece.length - 1; i >= 0; i--) {
         if (mapWithAddedPiece[i][j].canMoveDown()) {
-          if (
-            j + 1 < mapWithAddedPiece[0].length &&
-            mapWithAddedPiece[i][j + 1].isReplaceable()
-          ) {
-            mapWithAddedPiece[i][j + 1] = this.movingCellFactory.clone(
-              mapWithAddedPiece[i][j],
-            );
+          if (j + 1 < mapWithAddedPiece[0].length && mapWithAddedPiece[i][j + 1].isReplaceable()) {
+            mapWithAddedPiece[i][j + 1] = this.movingCellFactory.clone(mapWithAddedPiece[i][j]);
             mapWithAddedPiece[i][j] = new GameCell();
           } else {
             wasCollision = true;
@@ -101,12 +93,9 @@ export class Game extends EventEmitter {
   removeLines() {
     const mapWithAddedPiece = cloneDeep(this.gameState.map);
     for (let y = 0; y < mapWithAddedPiece[0].length; y++) {
-      const shouldBeRemoved = mapWithAddedPiece.reduce(
-        (prev: boolean, curr: GameCell[]) => {
-          return prev && curr[y].canBeRemovedInline();
-        },
-        true,
-      );
+      const shouldBeRemoved = mapWithAddedPiece.reduce((prev: boolean, curr: GameCell[]) => {
+        return prev && curr[y].canBeRemovedInline();
+      }, true);
       if (shouldBeRemoved) {
         for (let x = 0; x < mapWithAddedPiece.length; x++) {
           mapWithAddedPiece[x].splice(y, 1);
@@ -123,25 +112,16 @@ export class Game extends EventEmitter {
     let wasCollistion = false;
     const mapWithAddedPiece = cloneDeep(this.gameState.map);
     let mapWithAddedPiece2 = cloneDeep(this.gameState.map);
-    mapWithAddedPiece2 = this.gameState.clearMovingGameCells(
-      mapWithAddedPiece2,
-    );
+    mapWithAddedPiece2 = this.gameState.clearMovingGameCells(mapWithAddedPiece2);
     for (let j = mapWithAddedPiece[0].length - 1; j >= 0; j--) {
       for (let i = 0; i < mapWithAddedPiece.length; i++) {
         if (mapWithAddedPiece[i][j].constructor === MovingGameCell) {
           const r = this.mathUtil.rotatePoint(rotating.x, rotating.y, i, j, 90);
           let newX = Math.round(r.x);
           let newY = Math.round(r.y);
-          if (
-            newX < 0 ||
-            newY < 0 ||
-            newX >= mapWithAddedPiece2.length ||
-            newY >= mapWithAddedPiece2[0].length
-          ) {
+          if (newX < 0 || newY < 0 || newX >= mapWithAddedPiece2.length || newY >= mapWithAddedPiece2[0].length) {
             wasCollistion = true;
-          } else if (
-            mapWithAddedPiece2[newX][newY].constructor !== BlockGameCell
-          ) {
+          } else if (mapWithAddedPiece2[newX][newY].constructor !== BlockGameCell) {
             console.log(`${i}, ${j} ${newX} ${newY}`);
             newX = Math.abs(Math.round(r.x));
             newY = Math.abs(Math.round(r.y));
@@ -158,27 +138,12 @@ export class Game extends EventEmitter {
     }
   }
 
-  canPieceMoveSide(
-    position: GameCellPosition,
-    offset: GameCellPosition,
-    mapWithAddedPiece: GameCell[][],
-  ): IPieceMoveResult {
+  canPieceMoveSide(position: GameCellPosition, offset: GameCellPosition, mapWithAddedPiece: GameCell[][]): IPieceMoveResult {
     let wasCollision = false;
     if (mapWithAddedPiece[position.x][position.y].canMoveRight()) {
-      if (
-        position.x + offset.x >= 0 &&
-        position.x + offset.x < mapWithAddedPiece.length
-      ) {
-        if (
-          mapWithAddedPiece[position.x + offset.x][
-            position.y + offset.y
-          ].isReplaceable()
-        ) {
-          mapWithAddedPiece[position.x + offset.x][
-            position.y + offset.y
-          ] = this.movingCellFactory.clone(
-            mapWithAddedPiece[position.x][position.y],
-          );
+      if (position.x + offset.x >= 0 && position.x + offset.x < mapWithAddedPiece.length) {
+        if (mapWithAddedPiece[position.x + offset.x][position.y + offset.y].isReplaceable()) {
+          mapWithAddedPiece[position.x + offset.x][position.y + offset.y] = this.movingCellFactory.clone(mapWithAddedPiece[position.x][position.y]);
           mapWithAddedPiece[position.x][position.y] = new GameCell();
         }
       } else {
@@ -196,11 +161,7 @@ export class Game extends EventEmitter {
     let mapWithAddedPiece = cloneDeep(this.gameState.map);
     for (let y = mapWithAddedPiece[0].length - 1; y >= 0; y--) {
       for (let x = mapWithAddedPiece.length - 1; x >= 0; x--) {
-        const result = this.canPieceMoveSide(
-          new GameCellPosition(x, y),
-          new GameCellPosition(1, 0),
-          mapWithAddedPiece,
-        );
+        const result = this.canPieceMoveSide(new GameCellPosition(x, y), new GameCellPosition(1, 0), mapWithAddedPiece);
         mapWithAddedPiece = result.mapWithAddedPiece;
         wasCollision = wasCollision || result.wasCollision;
       }
@@ -215,11 +176,7 @@ export class Game extends EventEmitter {
     let mapWithAddedPiece = cloneDeep(this.gameState.map);
     for (let y = mapWithAddedPiece[0].length - 1; y >= 0; y--) {
       for (let x = 0; x < mapWithAddedPiece.length; x++) {
-        const result = this.canPieceMoveSide(
-          new GameCellPosition(x, y),
-          new GameCellPosition(-1, 0),
-          mapWithAddedPiece,
-        );
+        const result = this.canPieceMoveSide(new GameCellPosition(x, y), new GameCellPosition(-1, 0), mapWithAddedPiece);
         mapWithAddedPiece = result.mapWithAddedPiece;
         wasCollision = wasCollision || result.wasCollision;
       }

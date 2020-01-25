@@ -5,9 +5,7 @@ const PopupDialog = (props: any) => {
     <div className="popup-dialog">
       <div className="popup-dialog__content">
         <div className="popup-dialog__content--title">{props.title}</div>
-        <button
-          className="popup-dialog__content--button"
-          onClick={props.setNewGame}>
+        <button className="popup-dialog__content--button" onClick={props.setNewGame}>
           {props.actionName}
         </button>
       </div>
