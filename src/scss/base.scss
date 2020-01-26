@@ -1,24 +1,22 @@
 @import "variables";
 * {
-    margin:0;
-    padding:0;
+  margin: 0;
+  padding: 0;
 }
-*
-*::after
-*::before {
-    box-sizing: inherit;
+* *::after *::before {
+  box-sizing: inherit;
 }
 
 html {
-    box-sizing: border-box;
-    font-size:62.5%;
+  box-sizing: border-box;
+  font-size: 62.5%;
 }
 
 body {
-    padding: 0;
-    margin: 0;
-    line-height: 1.6;
-    font-family: $primary-font;
-    font-weight: 400;
-    background-color:$color-background-color;
+  padding: 0;
+  margin: 0;
+  line-height: 1.6;
+  font-family: $primary-font;
+  font-weight: 400;
+  background-color: $color-background-color;
 }

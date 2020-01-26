@@ -1,24 +1,24 @@
 import {
-  GAME_BOARD_LINE_WIDTH,
   GAMEBOARD_CELL_SIZE,
   GAMEBOARD_COLUMNS,
   GAMEBOARD_ROWS,
+  GAME_BOARD_LINE_WIDTH,
   GAME_BOARD_SHADOW_BLUR,
   GAME_BOARD_SHADOW_COLOR,
   GAME_BOARD_SHADOW_OFFSET_X,
   GAME_BOARD_SHADOW_OFFSET_Y,
   GAME_BOARD_STROKE_COLOR,
 } from "../../common/CanvasConstats";
-import { Game } from "../Game";
 import { GameCellPosition } from "../GameCellPosition";
+import { IGameState } from "../IGameState";
 import { ICanvasGameRender } from "./ICanvasGameRender";
 
 export class CanvasGameRenderer implements ICanvasGameRender {
-  private game: Game;
+  private gameState: IGameState;
   private ctx: CanvasRenderingContext2D;
 
-  constructor(game: Game, ctx: CanvasRenderingContext2D) {
-    this.game = game;
+  constructor(gameState: IGameState, ctx: CanvasRenderingContext2D) {
+    this.gameState = gameState;
     this.ctx = ctx;
   }
 
@@ -41,7 +41,6 @@ export class CanvasGameRenderer implements ICanvasGameRender {
   }
 
   private renderGameBoardCell(gameCellPosition: GameCellPosition): void {
-    console.log(this.ctx);
     this.ctx.beginPath();
     this.ctx.strokeStyle = GAME_BOARD_STROKE_COLOR;
     this.ctx.lineWidth = GAME_BOARD_LINE_WIDTH;
@@ -50,6 +49,6 @@ export class CanvasGameRenderer implements ICanvasGameRender {
   }
 
   private renderGameBlock(gameCellPosition: GameCellPosition): void {
-    this.game.gameState.getCell(gameCellPosition.x, gameCellPosition.y).render(this.ctx, gameCellPosition);
+    this.gameState.getCell(gameCellPosition).render(this.ctx, gameCellPosition);
   }
 }

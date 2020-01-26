@@ -1,7 +1,7 @@
+import { MOVING_GAME_BLOCK_COLOR } from "../../common/CanvasConstats";
 import { GameCellPosition } from "../GameCellPosition";
 import { GameCell } from "./GameCell";
 import { ICanvasRenderableElement } from "./ICanvasRenderableElement";
-import { MOVING_GAME_BLOCK_COLOR } from "../../common/CanvasConstats";
 
 export class MovingGameCell extends GameCell implements ICanvasRenderableElement {
   protected color: string = MOVING_GAME_BLOCK_COLOR;

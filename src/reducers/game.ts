@@ -1,10 +1,7 @@
 import { ACTION_TYPES } from "../actions";
 import { GAME_STATE } from "../game/Game";
 
-const game = (
-  state = { gameState: GAME_STATE.NEW_GAME, gameScore: 0 },
-  action: any,
-) => {
+const game = (state = { gameState: GAME_STATE.NEW_GAME, gameScore: 0 }, action: any) => {
   switch (action.type) {
     case ACTION_TYPES.SET_GAME_STATE:
       return {

@@ -23,6 +23,6 @@ export class MathUtil implements IMathUtil {
     const sin = Math.sin(radians);
     const nx = cos * (x - cx) + sin * (y - cy) + cx;
     const ny = cos * (y - cy) - sin * (x - cx) + cy;
-    return new GameCellPosition(nx, ny);
+    return new GameCellPosition(Math.round(nx), Math.round(ny));
   }
 }

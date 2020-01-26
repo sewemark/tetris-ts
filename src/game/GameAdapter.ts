@@ -8,7 +8,7 @@ import { CanvasGameRenderer } from "./render/CanvasGameRenderer";
 import { ICanvasGameRender } from "./render/ICanvasGameRender";
 
 const LINE_REMOVED_SCORE = 1;
-const GAME_BOARD_RENDER_INTERVAL_MS = 500;
+const GAME_BOARD_RENDER_INTERVAL_MS = 350;
 
 export type SetGameScoreType = (lineRemoveScore: number) => void;
 export type SetGameStateType = (gameState: string) => void;
@@ -69,10 +69,10 @@ export class GameAdapter implements IGameAdapter {
 
   private initDependency() {
     this.game = new Game(new MathUtil(), new MovingCellFactory());
-    this.canvasGameRenderer = new CanvasGameRenderer(this.game, this.canvas.getContext("2d"));
+    this.canvasGameRenderer = new CanvasGameRenderer(this.game.gameState, this.canvas.getContext("2d"));
     this.pieceMovesAdapter.set(KeyCode.left.value(), this.game.moveLeft.bind(this.game));
     this.pieceMovesAdapter.set(KeyCode.up.value(), this.game.rotate.bind(this.game));
     this.pieceMovesAdapter.set(KeyCode.right.value(), this.game.moveRight.bind(this.game));
-    this.pieceMovesAdapter.set(KeyCode.down.value(), this.game.down.bind(this.game));
+    this.pieceMovesAdapter.set(KeyCode.down.value(), this.game.moveDown.bind(this.game));
   }
 }

@@ -1,22 +1,22 @@
-import React from 'react';
-import './scss/index.scss';
-import GameBoard from './components/GameBoard';
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import rootReducer from './reducers'
-import GameScore from './components/GameScore';
+import React from "react";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import GameBoard from "./components/GameBoard";
+import GameScore from "./components/GameScore";
+import rootReducer from "./reducers";
+import "./scss/index.scss";
 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer);
 
 const App: React.FC = () => {
   return (
     <Provider store={store}>
       <div className="gameContainer">
-        <GameBoard  />
-        <GameScore  />
+        <GameBoard />
+        <GameScore />
       </div>
     </Provider>
   );
-}
+};
 
 export default App;
