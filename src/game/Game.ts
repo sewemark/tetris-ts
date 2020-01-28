@@ -203,7 +203,7 @@ export class Game extends EventEmitter implements IGameLogic {
           wasCollision = true;
         }
         if (nextPiece[x][y] !== 0) {
-          mapWithAddedPiece[middle + x][y] = this.createNewGameCell(nextPiece[x][y]);
+          mapWithAddedPiece[middle + x][y] = this.movingCellFactory.createNewGameCell(nextPiece[x][y]);
         }
       }
     }
@@ -228,10 +228,6 @@ export class Game extends EventEmitter implements IGameLogic {
   private getNextRandomPiece(): number[][] {
     const randomIndex = Math.floor(Math.random() * (4 - 0 + 1) + 0);
     return SHAPES[randomIndex];
-  }
-
-  private createNewGameCell(piece: number): GameCell {
-    return piece === 2 ? new RotatingMovingGameCell() : new MovingGameCell();
   }
 
   private canCellBePutInNewPosition(rotatedPoint: GameCellPosition, mapWithAddedPiece2: GameCell[][]): boolean {
