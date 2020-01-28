@@ -1,12 +1,12 @@
 import { KeyCode } from "../common/KeyCodes";
 import { GameLooseEvent } from "../events/GameLooseEvent";
 import { LineRemovedEvent } from "../events/LineRemovedEvent";
-import { NewPieceEvent } from "../events/NewPieceEvent";
 import { MathUtil } from "../utils/MathUtil";
 import { Game, GAME_STATE } from "./Game";
 import { MovingCellFactory } from "./MovingCellFactory";
 import { CanvasGameRenderer } from "./render/CanvasGameRenderer";
 import { ICanvasGameRender } from "./render/ICanvasGameRender";
+import { NewPieceEvent } from "../events/NewPieceEvent";
 
 const LINE_REMOVED_SCORE = 1;
 const GAME_BOARD_RENDER_INTERVAL_MS = 350;

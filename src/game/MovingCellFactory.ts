@@ -16,9 +16,13 @@ export class MovingCellFactory implements IMovingCellFactory {
   }
 
   createNewGameCell(piece: number): GameCell {
-    if (piece === 0) {
-      return new GameCell();
+    switch (piece) {
+      case 0:
+        return new GameCell();
+      case 2:
+        return new RotatingMovingGameCell();
+      default:
+        return new MovingGameCell();
     }
-    return piece === 2 ? new RotatingMovingGameCell() : new MovingGameCell();
   }
 }

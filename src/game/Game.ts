@@ -9,7 +9,6 @@ import { IMathUtil } from "../utils/MathUtil";
 import { BlockGameCell } from "./cells/BlockGameCell";
 import { GameCell } from "./cells/GameCell";
 import { MovingGameCell } from "./cells/MovingGameCell";
-import { RotatingMovingGameCell } from "./cells/RotatingMovingGameCell";
 import { GameCellPosition } from "./GameCellPosition";
 import { GameState } from "./GameState";
 import { IGameLogic } from "./IGameLogic";
@@ -42,6 +41,7 @@ export class Game extends EventEmitter implements IGameLogic {
     const result = this.canInsertNewPiece(currentPiece);
     this.gameState.setNewMap(result.mapWithAddedPiece);
     if (result.wasCollision) {
+      this.gameState.markAllMovingCellsAsGameCells();
       this.emit(GameLooseEvent.EVENT_NAME);
     }
   }
@@ -199,11 +199,12 @@ export class Game extends EventEmitter implements IGameLogic {
     let wasCollision = false;
     for (let x = 0; x < nextPiece.length; x++) {
       for (let y = 0; y < nextPiece[0].length; y++) {
-        if (!mapWithAddedPiece[middle + x][y].isReplaceable()) {
-          wasCollision = true;
-        }
         if (nextPiece[x][y] !== 0) {
-          mapWithAddedPiece[middle + x][y] = this.movingCellFactory.createNewGameCell(nextPiece[x][y]);
+          if (mapWithAddedPiece[middle + x][y].isReplaceable()) {
+            mapWithAddedPiece[middle + x][y] = this.movingCellFactory.createNewGameCell(nextPiece[x][y]);
+          } else {
+            wasCollision = true;
+          }
         }
       }
     }
