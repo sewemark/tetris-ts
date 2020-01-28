@@ -14,6 +14,11 @@ const game = (state = { gameState: GAME_STATE.NEW_GAME, gameScore: 0 }, action: 
         ...state,
         gameScore: state.gameScore + action.gameScore,
       };
+    case ACTION_TYPES.SET_NEXT_PIECE:
+      return {
+        ...state,
+        nextPiece: action.nextPiece,
+      };
     default:
       return state;
   }

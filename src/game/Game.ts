@@ -3,6 +3,7 @@ import cloneDeep from "lodash.clonedeep";
 import { GAMEBOARD_CELL_SIZE, GAMEBOARD_COLUMNS, GAMEBOARD_ROWS } from "../common/CanvasConstats";
 import { GameLooseEvent } from "../events/GameLooseEvent";
 import { LineRemovedEvent } from "../events/LineRemovedEvent";
+import { NewPieceEvent } from "../events/NewPieceEvent";
 import { SHAPES } from "../game/pieceDefinition/pieceDefinition";
 import { IMathUtil } from "../utils/MathUtil";
 import { BlockGameCell } from "./cells/BlockGameCell";
@@ -25,6 +26,7 @@ export class Game extends EventEmitter implements IGameLogic {
   private mathUtil: IMathUtil;
   private movingCellFactory: IMovingCellFactory;
   private mutex: boolean;
+  private nextPiece: number[][];
 
   constructor(mathUtil: IMathUtil, movingCellFactory: IMovingCellFactory) {
     super();
@@ -35,8 +37,9 @@ export class Game extends EventEmitter implements IGameLogic {
   }
 
   insertNewPiece(): void {
-    const nextPiece = this.getNextRandomPiece();
-    const result = this.canInsertNewPiece(nextPiece);
+    const currentPiece = this.setNextPiece();
+    this.emit(NewPieceEvent.EVENT_NAME, { nextPiece: this.nextPiece });
+    const result = this.canInsertNewPiece(currentPiece);
     this.gameState.setNewMap(result.mapWithAddedPiece);
     if (result.wasCollision) {
       this.emit(GameLooseEvent.EVENT_NAME);
@@ -239,5 +242,17 @@ export class Game extends EventEmitter implements IGameLogic {
       rotatedPoint.y < mapWithAddedPiece2[0].length &&
       mapWithAddedPiece2[rotatedPoint.x][rotatedPoint.y].constructor !== BlockGameCell
     );
+  }
+
+  private setNextPiece(): number[][] {
+    let currentPiece;
+    if (!this.nextPiece) {
+      this.nextPiece = this.getNextRandomPiece();
+      currentPiece = this.getNextRandomPiece();
+    } else {
+      currentPiece = cloneDeep(this.nextPiece);
+      this.nextPiece = this.getNextRandomPiece();
+    }
+    return currentPiece;
   }
 }

@@ -1,23 +1,11 @@
 import { GameCellPosition } from "../game/GameCellPosition";
 
 export interface IMathUtil {
-  rotatePoint(
-    cx: number,
-    cy: number,
-    x: number,
-    y: number,
-    angle: number,
-  ): GameCellPosition;
+  rotatePoint(cx: number, cy: number, x: number, y: number, angle: number): GameCellPosition;
 }
 
 export class MathUtil implements IMathUtil {
-  rotatePoint(
-    cx: number,
-    cy: number,
-    x: number,
-    y: number,
-    angle: number,
-  ): GameCellPosition {
+  rotatePoint(cx: number, cy: number, x: number, y: number, angle: number): GameCellPosition {
     const radians = (Math.PI / 180) * angle;
     const cos = Math.cos(radians);
     const sin = Math.sin(radians);

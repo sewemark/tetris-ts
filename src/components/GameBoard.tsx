@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { setGameScore, setGameState } from "../actions";
+import { setGameScore, setGameState, setNextPiece } from "../actions";
 import { GAMEBOARD_CELL_SIZE, GAMEBOARD_COLUMNS, GAMEBOARD_ROWS } from "../common/CanvasConstats";
 import { KeyCode } from "../common/KeyCodes";
 import { GAME_STATE } from "../game/Game";
@@ -17,7 +17,12 @@ class GameBoard extends React.Component {
   }
 
   componentDidMount() {
-    this.gameAdapter = new GameAdapter(this.refs.canvas, (this.props as any).setGameScore, (this.props as any).setGameState);
+    this.gameAdapter = new GameAdapter(
+      this.refs.canvas,
+      (this.props as any).setGameScore,
+      (this.props as any).setGameState,
+      (this.props as any).setNextPiece,
+    );
     this.gameAdapter.start();
     document.addEventListener("keydown", this.bindedOnArrowsKeyDownListener, false);
   }
@@ -64,6 +69,7 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   setGameScore: (addedGameScore: number) => dispatch(setGameScore(addedGameScore)),
   setGameState: (gameState: string) => dispatch(setGameState(gameState)),
+  setNextPiece: (nextPiece: number[][]) => dispatch(setNextPiece(nextPiece)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBoard);

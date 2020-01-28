@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import GameBoard from "./components/GameBoard";
 import GameScore from "./components/GameScore";
+import NextPiece from "./components/NextPiece";
 import rootReducer from "./reducers";
 import "./scss/index.scss";
 
@@ -13,7 +14,10 @@ const App: React.FC = () => {
     <Provider store={store}>
       <div className="gameContainer">
         <GameBoard />
-        <GameScore />
+        <div>
+          <GameScore />
+          <NextPiece />
+        </div>
       </div>
     </Provider>
   );

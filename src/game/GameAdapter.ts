@@ -1,6 +1,7 @@
 import { KeyCode } from "../common/KeyCodes";
 import { GameLooseEvent } from "../events/GameLooseEvent";
 import { LineRemovedEvent } from "../events/LineRemovedEvent";
+import { NewPieceEvent } from "../events/NewPieceEvent";
 import { MathUtil } from "../utils/MathUtil";
 import { Game, GAME_STATE } from "./Game";
 import { MovingCellFactory } from "./MovingCellFactory";
@@ -12,6 +13,7 @@ const GAME_BOARD_RENDER_INTERVAL_MS = 350;
 
 export type SetGameScoreType = (lineRemoveScore: number) => void;
 export type SetGameStateType = (gameState: string) => void;
+export type SetNextPieceType = (nextPiece: number[][]) => void;
 
 export interface IKeyboardPressedListener {
   triggerAction(keyCode: number): void;
@@ -28,12 +30,14 @@ export class GameAdapter implements IGameAdapter {
   private canvasGameRenderer: ICanvasGameRender;
   private setGameScore: SetGameScoreType;
   private setGameState: SetGameStateType;
+  private setNextPiece: SetNextPieceType;
   private canvas: any;
 
-  constructor(canvas: any, setGameScore: SetGameScoreType, setGameState: SetGameStateType) {
+  constructor(canvas: any, setGameScore: SetGameScoreType, setGameState: SetGameStateType, setNextPiece: SetNextPieceType) {
     this.canvas = canvas;
     this.setGameScore = setGameScore;
     this.setGameState = setGameState;
+    this.setNextPiece = setNextPiece;
   }
 
   start(): void {
@@ -46,6 +50,9 @@ export class GameAdapter implements IGameAdapter {
 
     this.game.on(LineRemovedEvent.EVENT_NAME, () => {
       this.setGameScore(LINE_REMOVED_SCORE);
+    });
+    this.game.on(NewPieceEvent.EVENT_NAME, data => {
+      this.setNextPiece(data.nextPiece);
     });
     this.startGame();
   }

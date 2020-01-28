@@ -43,8 +43,7 @@
       border-color: $color-text-color-secondary;
       outline: none;
       transition: all 0.2s;
-      &:hover,
-      &:active {
+      &:hover {
         border: none;
         transform: translateY(1.2);
       }
