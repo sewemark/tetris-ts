@@ -48,7 +48,7 @@
     "tslint": "^5.20.1",
     "redux-devtools": "^3.5.0",
     "typescript": "^3.7.5",
-    "node-sass": "^4.13.0"
+    "node-sass": "^7.0.0"
   },
   "prettier": "@screamz/aurora"
 }
